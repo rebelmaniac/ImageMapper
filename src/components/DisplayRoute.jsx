@@ -1,41 +1,31 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import ImageMapper from "react-img-mapper";
 import "../App.css";
-import JSON from "../data/area.json"
-import image from "../assets/rockWall.jpg";
-
-const wall = {
-  data: JSON,
-  Image: image,
-  dimentions: { width: 3024, height: 4032 },
-};
+import { RouteContext } from "../App.jsx";
 
 const DisplayRoute = () => {
- 
+  //Wall is the data from area.json. It is currently being directly manipulated in some way
+  const wall = useContext(RouteContext)
   const URL = wall.Image;
   const imageWidth = wall.dimentions.width;
   //const { innerWidth: width, innerHeight: height } = window;
   const scale = imageWidth / 500;
-
   const [displayAreas, setDisplayAreas] = useState([...wall.data]);
-  console.log(displayAreas)
   const [highlightedAreas, setHighlightedAreas] = useState([]);
   const preFillColor = "#8980807c";
 
   useEffect(() => {
     const coordScale = () => {
       let newAreas = [...wall.data];
-      console.log(scale)
       newAreas = newAreas.map((cur) => {
         cur.coords = cur.coords.map((coord) => coord / scale);
         return cur;
       });
-      console.log(newAreas)
       setDisplayAreas(newAreas);
     };
     coordScale();
-  }, []);
+  }, [scale, wall]);
 
   useEffect(() => {
     setDisplayAreas((prev) =>

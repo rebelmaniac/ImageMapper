@@ -1,18 +1,11 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect,useContext } from "react";
 import { Link } from "react-router-dom";
 import ImageMapper from "react-img-mapper";
 import "../App.css";
-import JSON from "../data/area.json"
-import image from "../assets/rockWall.jpg";
-
-const wall = {
-  data: JSON,
-  Image: image,
-  dimentions: { width: 3024, height: 4032 },
-};
+import { RouteContext } from "../App.jsx";
 
 const HighlightAreas = () => {
-  console.log(wall.data)
+  const wall = useContext(RouteContext)
   const URL = wall.Image;
   const imageWidth = wall.dimentions.width;
   //const { innerWidth: width, innerHeight: height } = window;
@@ -20,7 +13,6 @@ const HighlightAreas = () => {
 
   const [displayTwoAreas, setDisplayTwoAreas] = useState([...wall.data]);
   //console.log(wall);
-  console.log(wall.data)
 
   const [highlightedAreas, setHighlightedAreas] = useState([]);
   const preFillColor = "#8980807c";
@@ -28,16 +20,14 @@ const HighlightAreas = () => {
   useEffect(() => {
     const coordScale = () => {
       let newAreas = [...wall.data];
-      console.log(wall.data)
       newAreas = newAreas.map((cur) => {
         cur.coordsScaled = cur.coords.map((coord) => coord / scale);
-        console.log(wall.data)
         return cur;
       });
       setDisplayTwoAreas(newAreas);
     };
     coordScale();
-  }, []);
+  }, [scale,wall]);
 
   useEffect(() => {
     setDisplayTwoAreas((prev) =>
