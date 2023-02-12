@@ -3,29 +3,31 @@ import { Link } from "react-router-dom";
 import ImageMapper from "react-img-mapper";
 import "../App.css";
 import { RouteContext } from "../App.jsx";
+import _ from "lodash"
 
 const DisplayRoute = () => {
-  //Wall is the data from area.json. It is currently being directly manipulated in some way
-  const wall = useContext(RouteContext)
+  const wall = useContext(RouteContext);
+  const wallCopy = _.cloneDeep(wall)
+  const wallData = wallCopy.data
+  // const wallCopy = JSON.parse(JSON.stringify(wall.data))
   const URL = wall.Image;
   const imageWidth = wall.dimentions.width;
   //const { innerWidth: width, innerHeight: height } = window;
   const scale = imageWidth / 500;
-  const [displayAreas, setDisplayAreas] = useState([...wall.data]);
+
+  const [displayAreas, setDisplayAreas] = useState([...wallData]);
   const [highlightedAreas, setHighlightedAreas] = useState([]);
   const preFillColor = "#8980807c";
 
   useEffect(() => {
-    const coordScale = () => {
-      let newAreas = [...wall.data];
-      newAreas = newAreas.map((cur) => {
-        cur.coords = cur.coords.map((coord) => coord / scale);
-        return cur;
-      });
-      setDisplayAreas(newAreas);
-    };
-    coordScale();
-  }, [scale, wall]);
+    setDisplayAreas((prev) => {
+      return prev.map((cur) => {
+        cur.coords = cur.coords.map((coord) => coord / scale)
+        return cur
+      })
+    })
+    
+  }, [scale]);
 
   useEffect(() => {
     setDisplayAreas((prev) =>

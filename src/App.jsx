@@ -25,8 +25,8 @@ function App() {
         <RouteContext.Provider value={wall}>
           <Router>
             <Routes>
-              <Route path="/" element={<DisplayRoute />}></Route>
-              <Route path="/RouteDisplay" element={<HighlightAreas />}></Route>
+              <Route path="/" element={<DisplayRoute wall={wall}/>}></Route>
+              <Route path="/RouteDisplay" element={<HighlightAreas wall={wall}/>}></Route>
             </Routes>
           </Router>
 

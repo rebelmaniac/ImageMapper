@@ -1,33 +1,33 @@
-import React, { Fragment, useState, useEffect,useContext } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import ImageMapper from "react-img-mapper";
 import "../App.css";
 import { RouteContext } from "../App.jsx";
+import _ from "lodash"
 
 const HighlightAreas = () => {
-  const wall = useContext(RouteContext)
+  const wall = useContext(RouteContext);
+  const wallCopy = _.cloneDeep(wall)
+  const wallData = wallCopy.data
+  // const wallCopy = JSON.parse(JSON.stringify(wall.data))
   const URL = wall.Image;
   const imageWidth = wall.dimentions.width;
   //const { innerWidth: width, innerHeight: height } = window;
   const scale = imageWidth / 500;
 
-  const [displayTwoAreas, setDisplayTwoAreas] = useState([...wall.data]);
-  //console.log(wall);
-
+  const [displayTwoAreas, setDisplayTwoAreas] = useState([...wallData]);
   const [highlightedAreas, setHighlightedAreas] = useState([]);
   const preFillColor = "#8980807c";
 
   useEffect(() => {
-    const coordScale = () => {
-      let newAreas = [...wall.data];
-      newAreas = newAreas.map((cur) => {
-        cur.coordsScaled = cur.coords.map((coord) => coord / scale);
-        return cur;
-      });
-      setDisplayTwoAreas(newAreas);
-    };
-    coordScale();
-  }, [scale,wall]);
+    setDisplayTwoAreas((prev) => {
+      return prev.map((cur) => {
+        cur.coords = cur.coords.map((coord) => coord / scale)
+        return cur
+      })
+    })
+    
+  }, [scale]);
 
   useEffect(() => {
     setDisplayTwoAreas((prev) =>
