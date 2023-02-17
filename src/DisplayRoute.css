@@ -1,0 +1,11 @@
+.ImageMapper {
+  position: relative;
+}
+
+.Card.Body {
+  display: flex;
+}
+
+.canvas {
+  position: relative;
+}
