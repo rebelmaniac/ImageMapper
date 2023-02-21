@@ -15,12 +15,13 @@ const HighlightAreas = () => {
   //const { innerWidth: width, innerHeight: height } = window;
   const scale = imageWidth / 500;
 
-  const [displayTwoAreas, setDisplayTwoAreas] = useState([...wallData]);
+  const [displayHolds, setDisplayHolds] = useState([...wallData]);
+  console.log(displayHolds)
   const [highlightedAreas, setHighlightedAreas] = useState([]);
   const preFillColor = "#8980807c";
 
   useEffect(() => {
-    setDisplayTwoAreas((prev) => {
+    setDisplayHolds((prev) => {
       return prev.map((cur) => {
         cur.coords = cur.coords.map((coord) => coord / scale)
         return cur
@@ -30,7 +31,7 @@ const HighlightAreas = () => {
   }, [scale]);
 
   useEffect(() => {
-    setDisplayTwoAreas((prev) =>
+    setDisplayHolds((prev) =>
       prev.map((cur) =>
         highlightedAreas.includes(cur.id) ? { ...cur, preFillColor } : cur
       )
@@ -38,10 +39,6 @@ const HighlightAreas = () => {
   }, [highlightedAreas]);
 
   const handleEvent = (isClicked) => (area) => {
-    // WINDOW ID IS 21a3befd-c97b-476d-8e0c-7c98399988bf IN AREA.JSON
-    // REFRIGERATOR ID IS 5998531a-25b3-4288-adbe-53c4470a369b IN AREA.JSON
-    const refrigeratorId = "5998531a-25b3-4288-adbe-53c4470a369b";
-    const windowId = "21a3befd-c97b-476d-8e0c-7c98399988bf";
     // console.log(area);
     if (isClicked) {
       setHighlightedAreas((prev) => {
@@ -51,11 +48,10 @@ const HighlightAreas = () => {
       });
     }
 
-    setDisplayTwoAreas((prev) =>
+    setDisplayHolds((prev) =>
       prev.map((cur) => {
         if (
-          highlightedAreas.includes(cur.id) ||
-          (area.id === windowId && cur.id === refrigeratorId)
+          highlightedAreas.includes(cur.id)
         ) {
           return { ...cur, preFillColor };
         }
@@ -75,7 +71,7 @@ const HighlightAreas = () => {
           src={URL}
           map={{
             name: "my-map",
-            areas: displayTwoAreas,
+            areas: displayHolds,
           }}
           active={false}
           onClick={handleEvent(true)}
