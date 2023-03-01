@@ -6,7 +6,6 @@ import { RouteContext } from "../App.jsx";
 import _ from "lodash"
 import { ButtonGroup, Button, Card, Container } from "react-bootstrap";
 import JSON from "../data/route.json"
-import "../DisplayRoute.css"
 
 const DisplayRoute = () => {
   const wall = useContext(RouteContext);
