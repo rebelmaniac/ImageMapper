@@ -1,15 +1,15 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import ImageMapper from "react-img-mapper";
-import "../App.css";
-import { RouteContext } from "../App.jsx";
+
+import { RouteContext } from "./App";
 import _ from "lodash"
 
 const HighlightAreas = () => {
   const wall = useContext(RouteContext);
   const wallCopy = _.cloneDeep(wall)
   const wallData = wallCopy.data
-  // const wallCopy = JSON.parse(JSON.stringify(wall.data))
+
   const URL = wall.Image;
   const imageWidth = wall.dimentions.width;
   //const { innerWidth: width, innerHeight: height } = window;
@@ -81,9 +81,10 @@ const HighlightAreas = () => {
         />
       </div>
       <div className="w-100 text-center mt-3">
-        <Link to="/">DisplayRoute</Link>
+        <Link to="/DisplayRoute">DisplayRoute</Link>
+        <Link to="/CreateRoute">CreateRoute</Link>
       </div>
-      <div>I am here what do you need</div>
+      <div>This is Highlight Areas</div>
     </>
   );
 };

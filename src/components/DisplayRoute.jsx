@@ -1,26 +1,29 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 import { Link } from "react-router-dom";
 import ImageMapper from "react-img-mapper";
-import "../App.css";
-import { RouteContext } from "../App.jsx";
+
+import { RouteContext } from "./App";
 import _ from "lodash"
-import { ButtonGroup, Button, Card, Container } from "react-bootstrap";
+import { ButtonGroup, Button, Card, Container, ListGroup, ListGroupItem } from "react-bootstrap";
 import JSON from "../data/route.json"
-import "../DisplayRoute.css"
 
 const DisplayRoute = () => {
   const wall = useContext(RouteContext);
   const wallCopy = _.cloneDeep(wall)
   const wallData = wallCopy.data
-  const routes = JSON;
-  // const wallCopy = JSON.parse(JSON.stringify(wall.data))
+  // const routes = JSON;
+  //console.log(routes)
+
   const URL = wall.Image;
   const imageWidth = wall.dimentions.width;
   //const { innerWidth: width, innerHeight: height } = window;
   const scale = imageWidth / 500;
 
   const [displayRoutes, setDisplayRoutes] = useState([...wallData]);
-  const [currentRoute, setCurrentRoute] = useState([])
+  const [currentRoute, setCurrentRoute] = useState([]);
+  const [routes, setRoutes] = useState([]);
 
   console.log(displayRoutes)
   const preFillColor = "#898080A3";
@@ -48,11 +51,27 @@ const DisplayRoute = () => {
     
   }, [currentRoute]);
 
+  useEffect(() => {
+    const fetchPost = async () => {
+      await getDocs(collection(db, "routes")).then((querySnapshot) => {
+        const newData = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setRoutes(newData);
+        console.log(routes, newData);
+      });
+    };
+
+    fetchPost();
+  }, []);
+
   return (
     <>    
       <Container fluid>
-        <Card>
-          <Card.Body>
+        <Card style={{ width: "50%"}} className="mx-auto">
+          <Card.Header as="h4">{currentRoute.title}</Card.Header>
+          <Card.Body className="mx-auto">
             <ImageMapper
               src={URL}
               map={{
@@ -69,17 +88,37 @@ const DisplayRoute = () => {
 
       </Container>
 
-      <div>
-        <ButtonGroup>
+      <div className="w-100 text-center">
+        <ButtonGroup className="mx-auto">
             {routes.map((route) => (
-                <Button id={route.id} key={route.id} type="button" onClick={() => setCurrentRoute(route)}>{route.title}</Button>
+                <Button id={route.id} key={route.id} type="button" variant="dark" className="mx-auto" onClick={() => setCurrentRoute(route)}>{route.name}</Button>
               ))}
         </ButtonGroup>
       </div>
-      <div className="w-100 text-center mt-3">
-        <Link to="/RouteDisplay">DisplayRoute</Link>
+      <div>
+      <ListGroup>
+            {routes?.map((route, i) => (
+
+              <ListGroupItem
+                key={i}
+              >
+                <div>
+                  {`${route.name} => ${route.grade}`}
+                </div>
+                <div>
+                  {route.holds.map((hold) => (
+                    <div>{hold.id}</div>
+                  ))}
+                </div>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
       </div>
-      <div>I am here what do you need</div>
+      <div className="w-100 text-center mt-3">
+        <Link to="/RouteDisplay">HighlightAreas</Link>
+        <Link to="/CreateRoute">CreateRoute</Link>
+      </div>
+      <div className="text-center">This is Display Routes</div>
     </>
   );
 };
